@@ -1,4 +1,4 @@
-package com.whiteStudio.Ecommerce_Platform_Spring.resources;
+package com.whiteStudio.Ecommerce_Platform_Spring.controllers;
 
 import com.whiteStudio.Ecommerce_Platform_Spring.entities.User;
 import com.whiteStudio.Ecommerce_Platform_Spring.services.UserService;
@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/users")
-public class UserResource
+public class UserController
 {
     @Autowired
     private UserService service;
