@@ -1,18 +1,34 @@
 package com.whiteStudio.Ecommerce_Platform_Spring.resources;
 
+import com.whiteStudio.Ecommerce_Platform_Spring.entities.User;
+import com.whiteStudio.Ecommerce_Platform_Spring.services.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("/Users")
+@RequestMapping("/users")
 public class UserResource
 {
-    @GetMapping("/teste")
-    public ResponseEntity<String> teste()
+    @Autowired
+    private UserService service;
+
+    @GetMapping("/")
+    public ResponseEntity<List<User>> getAllUsers()
     {
-        return ResponseEntity.status(HttpStatus.OK).body("Construindo o serviço...");
+        List<User> u = service.findAll();
+        return ResponseEntity.ok().body(u);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Object> getUserById(@PathVariable(value="id") Long id)
+    {
+        Optional<User> u = service.findById(id);
+        return u.<ResponseEntity<Object>>map(user -> ResponseEntity.status(HttpStatus.OK).body(user)).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found"));
+    }
+
 }
