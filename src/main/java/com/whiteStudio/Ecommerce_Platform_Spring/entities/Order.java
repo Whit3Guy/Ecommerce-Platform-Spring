@@ -1,6 +1,8 @@
 package com.whiteStudio.Ecommerce_Platform_Spring.entities;
 
 //import com.whiteStudio.Ecommerce_Platform_Spring.enums.OrderStatus;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.whiteStudio.Ecommerce_Platform_Spring.enums.OrderStatus;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -13,8 +15,13 @@ public class Order implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    // formatador de horário pra mostrar que o horário é o UTC
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
     private Instant moment;
-//    private OrderStatus orderStatus;
+
+
+    private Integer orderStatus;
 
     @ManyToOne
     @JoinColumn(name = "client_id")
@@ -23,8 +30,8 @@ public class Order implements Serializable {
     public Order() {
     }
 
-    public Order(Long id, Instant moment, User client) {
-//        this.orderStatus = orderStatus;
+    public Order(Long id, Instant moment, User client, OrderStatus orderStatus) {
+        this.orderStatus = orderStatus.getCode();
         this.moment = moment;
         this.id = id;
         this.client = client;
@@ -58,13 +65,13 @@ public class Order implements Serializable {
         this.moment = moment;
     }
 
-//    public OrderStatus getOrderStatus() {
-//        return orderStatus;
-//    }
+    public OrderStatus getOrderStatus() {
+        return OrderStatus.valueOf(1);
+    }
 
-//    public void setOrderStatus(OrderStatus orderStatus) {
-//        this.orderStatus = orderStatus;
-//    }
+    public void setOrderStatus(OrderStatus orderStatus) {
+        this.orderStatus = orderStatus.getCode();
+    }
 
     public User getClient() {
         return client;
