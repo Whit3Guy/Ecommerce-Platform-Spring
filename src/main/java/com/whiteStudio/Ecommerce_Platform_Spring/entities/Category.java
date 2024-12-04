@@ -1,11 +1,11 @@
 package com.whiteStudio.Ecommerce_Platform_Spring.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 
@@ -15,6 +15,14 @@ public class Category implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+
+
+    @OneToMany(mappedBy = "category")
+    private List<Product> products = new ArrayList<>();
+    @JsonIgnore
+    public List<Product> getProducts() {
+        return products;
+    }
 
     public Category(Long id, String name) {
         this.id = id;
