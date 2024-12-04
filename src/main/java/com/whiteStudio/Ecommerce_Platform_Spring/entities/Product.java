@@ -3,7 +3,10 @@ package com.whiteStudio.Ecommerce_Platform_Spring.entities;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "product_table")
@@ -17,21 +20,29 @@ public class Product implements Serializable {
     private Double price;
     private String imgUrl;
 
-    @ManyToOne
-    @JoinColumn(name = "category_id")
-    private Category category;
+    @ManyToMany
+    @JoinTable(
+            name = "tb_product_category",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id")
+    )
+    private Set<Category> categories = new HashSet<>();
 
-    public Product(Long id, String name, String description, Double price, String imgUrl, Category category) {
+    public Product(Long id, String name, String description, Double price, String imgUrl) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.price = price;
         this.imgUrl = imgUrl;
-        this.category = category;
     }
 
-    public Category getCategory() {
-        return category;
+    public Set<Category> getCategories() {
+        return categories;
+    }
+
+    public void addCategory(Category cat)
+    {
+        this.categories.add(cat);
     }
 
     public Product() {
