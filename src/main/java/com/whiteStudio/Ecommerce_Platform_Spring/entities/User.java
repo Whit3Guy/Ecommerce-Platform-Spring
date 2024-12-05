@@ -1,19 +1,31 @@
 package com.whiteStudio.Ecommerce_Platform_Spring.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.whiteStudio.Ecommerce_Platform_Spring.entities.dtos.UserDto;
+import jakarta.persistence.*;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
+@Entity
+@Table(name = "user_table")
 public class User implements Serializable {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String email;
     private String phone;
     private String password;
+
+    @OneToMany(mappedBy = "client")
+    private List<Order> orders = new ArrayList<>();
+    @JsonIgnore
+    public List<Order> getOrders() {
+        return orders;
+    }
 
     public User() {
     }
@@ -48,6 +60,14 @@ public class User implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hashCode(id);
+    }
+
+    public void UserUpdate(User u)
+    {
+        this.name = u.getName();
+        this.email = u.getEmail();
+        this.phone = u.getPhone();
+        this.password = u.getPassword();
     }
 
     public Long getId() {
