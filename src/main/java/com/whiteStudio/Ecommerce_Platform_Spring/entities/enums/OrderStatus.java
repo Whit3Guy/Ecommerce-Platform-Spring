@@ -1,4 +1,4 @@
-package com.whiteStudio.Ecommerce_Platform_Spring.enums;
+package com.whiteStudio.Ecommerce_Platform_Spring.entities.enums;
 
 public enum OrderStatus {
     /* o java gera no enum uma numeração semelhante a arrays

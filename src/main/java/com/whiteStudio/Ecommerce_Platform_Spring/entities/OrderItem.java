@@ -1,5 +1,6 @@
 package com.whiteStudio.Ecommerce_Platform_Spring.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.whiteStudio.Ecommerce_Platform_Spring.PK.OrderItemPk;
 import jakarta.persistence.*;
 
@@ -10,32 +11,9 @@ import java.util.Objects;
 public class OrderItem {
 
     @EmbeddedId
-    private OrderItemPk id;
+    private OrderItemPk id = new OrderItemPk();
     private Integer quantity;
     private Double price;
-
-    public Order getOrder()
-    {
-        return id.getOrder();
-    }
-
-    public Product getProduct()
-    {
-        return id.getProduct();
-    }
-
-    public void setOrder(Order order)
-    {
-        id.setOrder(order);
-    }
-
-    public void setProduct(Product product)
-    {
-        id.setProduct(product);
-    }
-
-    public OrderItem() {
-    }
 
     public OrderItem(Order order, Product product, Double price, Integer quantity) {
         id.setOrder(order);
@@ -43,34 +21,27 @@ public class OrderItem {
         this.price = price;
         this.quantity = quantity;
     }
-    public Double subTotal()
-    {
-        return this.price * this.quantity;
-    }
+    // para que o subtotal apareça no json, o que vale pro Java é o get, então, não podemos deixar subTotal, mas sim, getSubTotal, para que fique visivel no json.
+    public Double getSubTotal() { return this.price * this.quantity; }
 
-    public OrderItemPk getId() {
-        return id;
-    }
+    public OrderItem() {}
 
-    public void setId(OrderItemPk id) {
-        this.id = id;
-    }
+    @JsonIgnore
+    public Order getOrder() {return id.getOrder();}
 
-    public Integer getQuantity() {
-        return quantity;
-    }
+    public Product getProduct() {return id.getProduct();}
 
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
-    }
+    public void setOrder(Order order) {id.setOrder(order);}
 
-    public Double getPrice() {
-        return price;
-    }
+    public void setProduct(Product product) {id.setProduct(product);}
 
-    public void setPrice(Double price) {
-        this.price = price;
-    }
+    public Integer getQuantity() {return quantity;}
+
+    public void setQuantity(Integer quantity) {this.quantity = quantity;}
+
+    public Double getPrice() {return price;}
+
+    public void setPrice(Double price) { this.price = price;}
 
     @Override
     public boolean equals(Object o) {
@@ -83,7 +54,4 @@ public class OrderItem {
     public int hashCode() {
         return Objects.hashCode(id);
     }
-
-
-
 }

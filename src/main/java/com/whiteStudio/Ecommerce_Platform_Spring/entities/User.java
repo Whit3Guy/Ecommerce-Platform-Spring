@@ -1,6 +1,7 @@
 package com.whiteStudio.Ecommerce_Platform_Spring.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.whiteStudio.Ecommerce_Platform_Spring.entities.dtos.UserDto;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -59,6 +60,14 @@ public class User implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hashCode(id);
+    }
+
+    public void UserUpdate(User u)
+    {
+        this.name = u.getName();
+        this.email = u.getEmail();
+        this.phone = u.getPhone();
+        this.password = u.getPassword();
     }
 
     public Long getId() {

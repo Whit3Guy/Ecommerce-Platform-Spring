@@ -1,14 +1,8 @@
 package com.whiteStudio.Ecommerce_Platform_Spring.config;
 
-import com.whiteStudio.Ecommerce_Platform_Spring.entities.Category;
-import com.whiteStudio.Ecommerce_Platform_Spring.entities.Product;
-import com.whiteStudio.Ecommerce_Platform_Spring.entities.User;
-import com.whiteStudio.Ecommerce_Platform_Spring.entities.Order;
-import com.whiteStudio.Ecommerce_Platform_Spring.enums.OrderStatus;
-import com.whiteStudio.Ecommerce_Platform_Spring.repositories.CategoryRepository;
-import com.whiteStudio.Ecommerce_Platform_Spring.repositories.OrderRepository;
-import com.whiteStudio.Ecommerce_Platform_Spring.repositories.ProductRepository;
-import com.whiteStudio.Ecommerce_Platform_Spring.repositories.UserRepository;
+import com.whiteStudio.Ecommerce_Platform_Spring.entities.*;
+import com.whiteStudio.Ecommerce_Platform_Spring.entities.enums.OrderStatus;
+import com.whiteStudio.Ecommerce_Platform_Spring.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
@@ -31,6 +25,9 @@ public class ConfigTest implements CommandLineRunner {
 
     @Autowired
     private ProductRepository _repPr;
+
+    @Autowired
+    private OrderItemRepository _repOi;
 
     @Override
     public void run(String... args) throws Exception {
@@ -71,6 +68,21 @@ public class ConfigTest implements CommandLineRunner {
 
         _repOr.saveAll(Arrays.asList(o1,o2,o3));
 
+        OrderItem oi1 = new OrderItem(o1, p1, p1.getPrice(),2);
+        OrderItem oi2 = new OrderItem(o1, p3, p3.getPrice(),1);
+        OrderItem oi3 = new OrderItem(o2, p3, p3.getPrice(),2);
+        OrderItem oi4 = new OrderItem(o3, p5, p5.getPrice(),2);
 
+        _repOi.saveAll(Arrays.asList(oi1,oi2,oi3,oi4));
+
+        // o pagamento ( payment ) é dependente do pedido ( order ), portanto, não precisa de um repositório próprio, apenas precisa de um pedido pra "fazer parte"
+
+        Payment pay1 = new Payment(null, Instant.parse("2019-06-20T21:53:07Z"), o1);
+
+        // portanto, pra salvar esse pagamento, basta o adicionar ao pedido que colocamos no constructor
+
+        o1.setPayment(pay1);
+
+        _repOr.save(o1);
     }
 }

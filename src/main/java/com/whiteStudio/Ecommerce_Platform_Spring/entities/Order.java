@@ -1,13 +1,14 @@
 package com.whiteStudio.Ecommerce_Platform_Spring.entities;
 
-//import com.whiteStudio.Ecommerce_Platform_Spring.enums.OrderStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.whiteStudio.Ecommerce_Platform_Spring.enums.OrderStatus;
+import com.whiteStudio.Ecommerce_Platform_Spring.entities.enums.OrderStatus;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "order_table")
@@ -20,21 +21,40 @@ public class Order implements Serializable {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
     private Instant moment;
 
-
     private Integer orderStatus;
 
     @ManyToOne
     @JoinColumn(name = "client_id")
     private User client;
 
-    public Order() {
-    }
+    @OneToMany(mappedBy = "id.order")
+    private Set<OrderItem> items = new HashSet<>();
+
+    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
+    private Payment payment;
+
+    public Order(){}
 
     public Order(Long id, Instant moment, User client, OrderStatus orderStatus) {
         this.orderStatus = orderStatus.getCode();
         this.moment = moment;
         this.id = id;
         this.client = client;
+    }
+
+    public Double getTotal()
+    {
+        double temp = 0;
+        for(OrderItem x: this.items)
+        {
+            temp += x.getSubTotal();
+        }
+        return temp;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 
     @Override
@@ -44,40 +64,27 @@ public class Order implements Serializable {
         return id == order.id;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
-    }
+    public Payment getPayment() { return payment; }
 
-    public Long getId() {
-        return id;
-    }
+    public void setPayment(Payment payment) { this.payment = payment; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public void setOrderStatus(Integer orderStatus) { this.orderStatus = orderStatus; }
 
-    public Instant getMoment() {
-        return moment;
-    }
+    public Set<OrderItem> getItems() {return this.items;}
 
-    public void setMoment(Instant moment) {
-        this.moment = moment;
-    }
+    public Long getId() {return id;}
 
-    public OrderStatus getOrderStatus() {
-        return OrderStatus.valueOf(1);
-    }
+    public void setId(Long id) {this.id = id;}
 
-    public void setOrderStatus(OrderStatus orderStatus) {
-        this.orderStatus = orderStatus.getCode();
-    }
+    public Instant getMoment() {return moment;}
 
-    public User getClient() {
-        return client;
-    }
+    public void setMoment(Instant moment) {this.moment = moment;}
 
-    public void setClient(User client) {
-        this.client = client;
-    }
+    public OrderStatus getOrderStatus() {return OrderStatus.valueOf(1);}
+
+    public void setOrderStatus(OrderStatus orderStatus) {this.orderStatus = orderStatus.getCode();}
+
+    public User getClient() {return client;}
+
+    public void setClient(User client) {this.client = client;}
 }
