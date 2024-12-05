@@ -1,7 +1,7 @@
 package com.whiteStudio.Ecommerce_Platform_Spring.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.whiteStudio.Ecommerce_Platform_Spring.PK.OrderItemPk;
+import com.whiteStudio.Ecommerce_Platform_Spring.entities.PK.OrderItemPk;
 import jakarta.persistence.*;
 
 import java.util.Objects;

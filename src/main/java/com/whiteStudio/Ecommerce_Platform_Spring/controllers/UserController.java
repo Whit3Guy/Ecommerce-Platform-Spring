@@ -4,12 +4,15 @@ import com.whiteStudio.Ecommerce_Platform_Spring.entities.User;
 import com.whiteStudio.Ecommerce_Platform_Spring.entities.dtos.UserDto;
 import com.whiteStudio.Ecommerce_Platform_Spring.entities.dtos.UserUpdateDto;
 import com.whiteStudio.Ecommerce_Platform_Spring.services.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,46 +38,33 @@ public class UserController
     }
 
     @PostMapping("/")
-    public ResponseEntity<Object> postUser(@RequestBody UserDto u)
+    public ResponseEntity<Object> postUser(@RequestBody @Valid UserDto u)
     {
+
         User user = new User();
         BeanUtils.copyProperties(u, user);
-        try {
-            service.insert(user);
-            return ResponseEntity.ok().body(user);
-        } catch (RuntimeException e) {
-            System.out.println(e.getMessage());
-            return ResponseEntity.badRequest().body("Formato invalido");
-        }
+        User u1 = service.insert(user);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().
+                path("{id}").
+                buildAndExpand(u1.getId()).
+                toUri();
+        return ResponseEntity.created(uri).body(user);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Object> putUser(@PathVariable(value = "id") Long id, @RequestBody UserUpdateDto user)
     {
-        try
-        {
-
         User u = new User();
         BeanUtils.copyProperties(user, u);
         return ResponseEntity.ok().body(service.update(u, id));
-
-        } catch (RuntimeException e) {
-            System.out.println(e.getMessage());
-            return ResponseEntity.badRequest().body("Usuario não encontrado");
-        }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteUser(@PathVariable(value = "id") Long id)
     {
-        try
-        {
             User u = service.remove(id);
             return ResponseEntity.ok().body(u);
 
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario não encontrado");
-        }
     }
 
 }
