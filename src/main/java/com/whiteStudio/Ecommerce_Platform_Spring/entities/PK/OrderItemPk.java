@@ -1,7 +1,6 @@
-package com.whiteStudio.Ecommerce_Platform_Spring.PK;
+package com.whiteStudio.Ecommerce_Platform_Spring.entities.PK;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.whiteStudio.Ecommerce_Platform_Spring.entities.Order;
 import com.whiteStudio.Ecommerce_Platform_Spring.entities.Product;
 import jakarta.persistence.Embeddable;

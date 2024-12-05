@@ -2,6 +2,7 @@ package com.whiteStudio.Ecommerce_Platform_Spring.services;
 
 import com.whiteStudio.Ecommerce_Platform_Spring.entities.User;
 import com.whiteStudio.Ecommerce_Platform_Spring.repositories.UserRepository;
+import com.whiteStudio.Ecommerce_Platform_Spring.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +30,7 @@ public class UserService {
         return _rep.save(user);
     }
 
-    public User remove(Long id) throws RuntimeException
+    public User remove(Long id)
     {
         Optional<User> u = _rep.findById(id);
         if(u.isPresent()) {
@@ -38,11 +39,11 @@ public class UserService {
         }
         else
         {
-            throw new RuntimeException("Usuário não encontrado");
+            throw new ResourceNotFoundException(id);
         }
     }
 
-    public User update(User user, Long id) throws RuntimeException
+    public User update(User user, Long id)
     {
         Optional<User> u = _rep.findById(id);
         if(u.isPresent())
@@ -54,7 +55,7 @@ public class UserService {
         }
         else
         {
-            throw new RuntimeException("Usuário não encontrado");
+            throw new ResourceNotFoundException(id);
         }
     }
 }
